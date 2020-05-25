@@ -7,7 +7,7 @@ import sys
 from logzero import logger
 
 
-class Template:
+class Househunter:
     def __init__(self):
         logger.debug("Initializing the value to 1")
         self.value = 1

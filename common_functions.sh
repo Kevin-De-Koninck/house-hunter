@@ -3,8 +3,8 @@
 ####################################################################################
 
 # Project info
-MODULE="template"
-REGISTRY="docker.pkg.github.com/kevin-de-koninck/python-project-template"
+MODULE="househunter"
+REGISTRY="docker.pkg.github.com/kevin-de-koninck/house-hunter"
 
 # Image and tag
 IMAGE="${REGISTRY}/${MODULE}"

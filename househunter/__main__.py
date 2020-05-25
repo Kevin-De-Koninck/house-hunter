@@ -6,7 +6,7 @@ Some handy texts
 
 import argparse
 from logzero import logger
-from .app.app import Template
+from .app.app import Househunter
 
 
 def parse_args():
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     if args.verbose:
         logger.info("Argument -v|-vv|-vvv: %s", args.verbose)
 
-    template = Template()
-    template.inc()
-    logger.debug("The value now is '%s'", template.value)
+    househunter = Househunter()
+    househunter.inc()
+    logger.debug("The value now is '%s'", househunter.value)
 

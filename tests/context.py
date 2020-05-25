@@ -1,2 +1,2 @@
-from template import Template  # noqa # pylint: disable=unused-import, wrong-import-position
+from househunter import Househunter  # noqa # pylint: disable=unused-import, wrong-import-position
 
