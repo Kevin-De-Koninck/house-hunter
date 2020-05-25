@@ -1,5 +1,8 @@
 ![Build and tests](https://github.com/Kevin-De-Koninck/house-hunter/workflows/Build%20and%20tests/badge.svg)
 ![Push Docker container](https://github.com/Kevin-De-Koninck/house-hunter/workflows/Push%20Docker%20container/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Kevin-De-Koninck_house-hunter&metric=alert_status)](https://sonarcloud.io/dashboard?id=Kevin-De-Koninck_house-hunter)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Kevin-De-Koninck_house-hunter&metric=coverage)](https://sonarcloud.io/dashboard?id=Kevin-De-Koninck_house-hunter)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Kevin-De-Koninck_house-hunter&metric=security_rating)](https://sonarcloud.io/dashboard?id=Kevin-De-Koninck_house-hunter)
 
 # house-hunter
 
@@ -44,19 +47,21 @@ househunter:
       - apartment
       - new-real-estate-project-houses
       - new-real-estate-project-apartments
-    bedrooms_min: 2
-    connected_to_the_sewer_network: True
-    flood_zone: False
-    gas_water_electricity: True
-    double_glazing: True
-    planning_permission_obtained: True
-    Latest_land_use_designation: 'Living area'
-    preffered_filters:
-      building_conditions:
-        - 'as new'
-        - 'good'
-      kitchen_type: 'installed' 
-      facades: 4
+    filters:
+      required:
+        bedrooms_min: 2
+        connected_to_the_sewer_network: True
+        flood_zone: False
+        gas_water_electricity: True
+        double_glazing: True
+        planning_permission_obtained: True
+        Latest_land_use_designation: 'Living area'
+      preffered_filters:
+        building:
+          - 'as new'
+          - 'good'
+        kitchen_type: 'installed' 
+        facades: 4
 
 pushover:
   API_token: 'abcdefghijklmnopqrstuvwxyz0123'
