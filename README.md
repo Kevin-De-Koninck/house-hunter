@@ -31,6 +31,12 @@ This project requires the PushOver keys to be present in a YAML file that is vol
 
 ``` yaml
 househunter:
+  enabled_sites:
+    - 'immoweb.be'
+    - 'zimmo.be'
+    - immo.vlan.be'
+    - 'realo.be'
+    - 'immoscoop.be'
   postal_codes:
     - 2200  # Herentals
     - 2000  # Antwerp
@@ -56,12 +62,17 @@ househunter:
         double_glazing: True
         planning_permission_obtained: True
         Latest_land_use_designation: 'Living area'
+        epc_max: 700
+        build_year_max: 1990
       preferred:
         building:
           - 'as new'
           - 'good'
         kitchen_type: 'installed' 
         facades: 4
+        mobi_score_min: 7
+        garage: True
+        garden: True
 
 pushover:
   API_token: 'abcdefghijklmnopqrstuvwxyz0123'
