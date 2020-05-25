@@ -56,7 +56,7 @@ househunter:
         double_glazing: True
         planning_permission_obtained: True
         Latest_land_use_designation: 'Living area'
-      preffered:
+      preferred:
         building:
           - 'as new'
           - 'good'
