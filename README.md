@@ -22,12 +22,9 @@
 ./run.sh -v 'v0.0.1'
 ```
 
-## Pushover keys
+## Config file
 
-This project requires the PushOver keys to be present in a YAML file that is volume mounted inside the container. An example config file:
-
-
-
+An example config file:
 
 ``` yaml
 househunter:
