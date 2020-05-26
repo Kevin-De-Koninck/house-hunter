@@ -1,42 +1,18 @@
-"""
-Documentation
-
-Some handy texts
-"""
-
 import argparse
 from logzero import logger
 from .app.app import Househunter
-
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("-p", "--port",
-                        action="store", type=int,
-                        help="Required positional argument")
-    parser.add_argument("-f", "--flag",
-                        action="store_true", default=False,
-                        help="Optional argument flag which defaults to False")
-    parser.add_argument("-n", "--name",
-                        action="store",
-                        help="Optional argument which requires a parameter (ei.g.: -n test)")
-    parser.add_argument("-v", "--verbose",
-                        action="count", default=0,
-                        help="Optional verbosity counter (-v, -vv, etc)")
-
-    return parser.parse_args()
-
+from.app.settings import Pushover_settings, Househunter_settings
 
 if __name__ == '__main__':
-    args = parse_args()
-    logger.info("Argument -p|--port: %s", args.port)
-    logger.info("Argument -f|--flag: %s", args.flag)
-    logger.info("Argument -n|--name: %s", args.name)
-    if args.verbose:
-        logger.info("Argument -v|-vv|-vvv: %s", args.verbose)
+    config_file = "/app/househunter/resources/config.yml"
 
-    househunter = Househunter()
-    househunter.inc()
-    logger.debug("The value now is '%s'", househunter.value)
+    p_settings = Pushover_settings(config_file)
+    h_settings = Househunter_settings(config_file)
+
+    logger.debug("The API_key: {}".format(p_settings.API_key))
+    logger.debug("The enabled_sites: {}".format(h_settings.enabled_sites))
+    logger.debug("The old_realestate price maximum: {}".format(h_settings.price.old_realestate.maximum))
+    logger.debug("The property types: {}".format(h_settings.property.types))
+    logger.debug("The property required bedrooms min: {}".format(h_settings.property.filters.required.bedrooms_min))
+
 

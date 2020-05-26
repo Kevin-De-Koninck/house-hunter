@@ -31,7 +31,7 @@ househunter:
   enabled_sites:
     - 'immoweb.be'
     - 'zimmo.be'
-    - immo.vlan.be'
+    - 'immo.vlan.be'
     - 'realo.be'
     - 'immoscoop.be'
   postal_codes:
@@ -45,7 +45,7 @@ househunter:
       minimum: 150000
       maximum: 230000
   property:
-    type:
+    types:
       - house
       - apartment
       - new-real-estate-project-houses
@@ -62,7 +62,7 @@ househunter:
         epc_max: 700
         build_year_max: 1990
       preferred:
-        building:
+        building_state:
           - 'as new'
           - 'good'
         kitchen_type: 'installed' 
