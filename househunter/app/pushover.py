@@ -24,7 +24,6 @@ class Pushover:
             data['url_title'] = message.url_title
         if message.image_path is not None:
             files = {"attachment": ("image.jpg", open(message.image_path, "rb"), "image/jpeg")}
-        
 
         logger.debug("Sending push notification with the following message:\n%s", message)
         response = requests.post("https://api.pushover.net/1/messages.json",

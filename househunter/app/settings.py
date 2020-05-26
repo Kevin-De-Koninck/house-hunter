@@ -39,23 +39,3 @@ class Settings:
             else:
                 setattr(self, k, v)
 
-
-class Pushover_settings(Settings):
-    def __init__(self, config_file):
-        super().__init__(config_file)
-        self.API_token = self.pushover.API_token
-        self.user_ley = self.pushover.user_key
-        del self.pushover
-        del self.househunter
-
-
-class Househunter_settings(Settings):
-    def __init__(self, config_file):
-        super().__init__(config_file)
-        self.enabled_sites = self.househunter.enabled_sites
-        self.postal_codes = self.househunter.postal_codes
-        self.price = self.househunter.price
-        self.property = self.househunter.property
-        del self.pushover
-        del self.househunter
-
