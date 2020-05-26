@@ -2,9 +2,18 @@ import sys
 from logzero import logger
 
 
-class Micro_mock(object):
+class Anon_kwargs(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+
+
+class Anon_dict(object):
+    def __init__(self, dictionary):
+        for k, v in dictionary.items():
+            if isinstance(v, dict):
+                setattr(self, k, Anon_dict(v))
+            else:
+                setattr(self, k, v)
 
 
 class Helpers:
