@@ -1,10 +1,11 @@
 from logzero import logger
 from .app.app import Househunter
 from .app.settings import Settings, Pushover_settings, Househunter_settings
-from .app.pushover import Pushover, Pushover_message
+from .app.pushover import Pushover, Message
 
 if __name__ == '__main__':
     config_file = "/app/househunter/resources/config.yml"
+    demo_image = "/app/househunter/resources/demo_image.jpg"
 
     h = Househunter()
 
@@ -28,9 +29,9 @@ if __name__ == '__main__':
     logger.debug("The property required bedrooms min: %s", hs.property.filters.required.bedrooms_min)
 
     p = Pushover(settings.pushover.user_key, settings.pushover.API_token)
-    p.send_notification("Woohoo")
-
-    m = Pushover_message()
+    m = Message(title="Fancy title here", message="test message",
+                image_path=demo_image, url="www.google.com",
+                url_title="My url", priority=Message.HIGH_PRIORITY)
     m.add_message("Added message 1")
     m.add_message("Added message 2")
     p.send(m)
