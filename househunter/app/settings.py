@@ -2,10 +2,10 @@ import os
 import sys
 import yaml
 from logzero import logger
-from .helpers import Helpers, Anon_dict
+from .helpers import Anon_dict
 
 
-class Config_file_parser:
+class Yaml_parser:
     def __init__(self, config_file):
         self.config_file = config_file
         self.check_if_file_exists()
@@ -31,7 +31,9 @@ class Config_file_parser:
 
 class Settings:
     def __init__(self, config_file):
-        for k, v in Config_file_parser(config_file).parse_yaml().items():
+        self.pushover = None
+        self.househunter = None
+        for k, v in Yaml_parser(config_file).parse_yaml().items():
             if isinstance(v, dict):
                 setattr(self, k, Anon_dict(v))
             else:
@@ -43,9 +45,9 @@ class Pushover_settings(Settings):
         super().__init__(config_file)
         self.API_token = self.pushover.API_token
         self.user_ley = self.pushover.user_key
-        del(self.pushover)
-        del(self.househunter)
-        
+        del self.pushover
+        del self.househunter
+
 
 class Househunter_settings(Settings):
     def __init__(self, config_file):
@@ -54,6 +56,6 @@ class Househunter_settings(Settings):
         self.postal_codes = self.househunter.postal_codes
         self.price = self.househunter.price
         self.property = self.househunter.property
-        del(self.pushover)
-        del(self.househunter)
+        del self.pushover
+        del self.househunter
 

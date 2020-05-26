@@ -2,12 +2,12 @@ import sys
 from logzero import logger
 
 
-class Anon_kwargs(object):
+class Anon_kwargs:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
 
-class Anon_dict(object):
+class Anon_dict:
     def __init__(self, dictionary):
         for k, v in dictionary.items():
             if isinstance(v, dict):
@@ -18,6 +18,7 @@ class Anon_dict(object):
 
 class Helpers:
     # Much faster (but simpler) deepcopy implementation that is sufficient for the needs of this script
+    @staticmethod
     def deepcopy(original):
         new = dict().fromkeys(original)
         for k, v in original.items():
@@ -30,6 +31,7 @@ class Helpers:
                     new[k] = v  # int
         return new
 
+    @staticmethod
     def convert_to_value(yaml_expression, dictionary):
         value = Helpers.deepcopy(dictionary)
         try:
@@ -38,7 +40,8 @@ class Helpers:
                 if value is None:
                     break
         except (AttributeError, KeyError):
-            logger.error("Key '{}' does not exist in the following dictionary:\n{}'".format(yaml_expression, dictionary))
+            logger.error("Key '%s' does not exist in the following dictionary:\n%s'",
+                         yaml_expression, repr(dictionary))
             sys.exit(1)
         return value
 

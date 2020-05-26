@@ -1,4 +1,4 @@
-import sys                                                                                                                                                                        
+import sys
 import http.client
 import urllib
 from logzero import logger
