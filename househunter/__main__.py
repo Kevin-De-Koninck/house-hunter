@@ -23,4 +23,5 @@ if __name__ == '__main__':
 #    p.send(m)
 
     h = Househunter(settings)
+    h.parse_all_sites()
 

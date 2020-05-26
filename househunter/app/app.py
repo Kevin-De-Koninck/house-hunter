@@ -1,3 +1,8 @@
+import sys
+from logzero import logger
+from .immoweb import Immoweb
+
+
 class Househunter:
 
     def __init__(self, settings):
@@ -5,5 +10,19 @@ class Househunter:
         self.ps = settings.pushover
 
         print(self.hs.websites)
+
+    def parse_all_sites(self):
+        for site in self.hs.websites:
+            site_class = None
+            if site == 'immoweb.be':
+                site_class = Immoweb
+            else:
+                logger.error("Website '%s' is not a valid website...", site)
+                sys.exit(1)
+            self.parse_site(site_class())
+
+    def parse_site(self, site):
+        _ = self.hs
+        site.hello_world()
 
 
