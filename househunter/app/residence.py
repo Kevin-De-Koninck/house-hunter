@@ -3,7 +3,6 @@ from datetime import datetime
 
 class Price:
     def __init__(self):
-        self.date_of_change = None
         self.history = []
 
     @property
@@ -13,10 +12,10 @@ class Price:
         return self.history[0].get('price')
 
     @property
-    def price_has_been_lowered(self):
+    def lowest_recorded_price(self):
         if len(self.history) <= 1:
-            return False
-        return self.history[0].get('price') < self.history[1].get('price')
+            return True
+        return min([p.get('price') for p in self.history])
 
     @property
     def date_of_last_change(self):
