@@ -8,26 +8,26 @@ class Price:
 
     @property
     def price(self):
-        if not len(self.history):
+        if len(self.history) == 0:
             return None
         return self.history[0].get('price')
 
     @property
     def price_has_been_lowered(self):
-        if not len(self.history) > 1:
+        if len(self.history) <= 1:
             return False
         return self.history[0].get('price') < self.history[1].get('price')
 
     @property
     def date_of_last_change(self):
-        if not len(self.history):
+        if len(self.history) == 0:
             return None
         return self.history[0].get('date_of_change')
 
     def add(self, price):
         self.history.append({"date_of_change": datetime.now().timestamp(),
                              "price": price})
-        self.history.sort(key = lambda x:x['date_of_change'], reverse=True)
+        self.history.sort(key=lambda x: x['date_of_change'], reverse=True)
 
 
 class Residence:
