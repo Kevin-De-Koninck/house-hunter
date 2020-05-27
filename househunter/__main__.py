@@ -1,7 +1,7 @@
 from logzero import logger
 from .app.app import Househunter
-from .app.settings import Settings
-from .app.pushover import Pushover, Message
+from .app.settings.settings import Settings
+from .app.helpers.pushover import Pushover, Message
 
 if __name__ == '__main__':
     config_file = "/app/househunter/resources/config.yml"
@@ -20,8 +20,8 @@ if __name__ == '__main__':
                 url_title="My url", priority=Message.HIGH_PRIORITY)
     m.add_message("Added message 1")
     m.add_message("Added message 2")
-#    p.send(m)
+    # p.send(m)
 
     h = Househunter(settings)
     h.parse_all_sites()
-
+    h.hello_world()

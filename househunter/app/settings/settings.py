@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 from logzero import logger
-from .helpers import Anon_dict
+from ..helpers.helpers import Anon_dict
 
 
 class Yaml_parser:

@@ -1,6 +1,7 @@
 import sys
 from logzero import logger
-from .immoweb import Immoweb
+from .source_sites.immoweb import Immoweb
+from .models.posting import Posting
 
 
 class Househunter:
@@ -25,4 +26,8 @@ class Househunter:
         _ = self.hs
         site.hello_world()
 
+    @staticmethod
+    def hello_world():
+        print(repr(Posting().__dict__))
+        print(repr(Posting().residence.__dict__))
 
