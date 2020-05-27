@@ -1,16 +1,33 @@
+from datetime import datetime
+
+
 class Price:
     def __init__(self):
-        self.price = 0
         self.date_of_change = None
         self.history = []
-        self.price_has_been_lowered = False
 
-    def add_price(self, price):
-        self.history.append({"date_of_change": self.date_of_change,
-                             "price": self.price})
-        self.price_has_been_lowered = price < self.price
-        self.price = price
-        self.date_of_change = None  # Todo add datetime object
+    @property
+    def price(self):
+        if not len(self.history):
+            return None
+        return self.history[0].get('price')
+
+    @property
+    def price_has_been_lowered(self):
+        if not len(self.history) > 1:
+            return False
+        return self.history[0].get('price') < self.history[1].get('price')
+
+    @property
+    def date_of_last_change(self):
+        if not len(self.history):
+            return None
+        return self.history[0].get('date_of_change')
+
+    def add(self, price):
+        self.history.append({"date_of_change": datetime.now().timestamp(),
+                             "price": price})
+        self.history.sort(key = lambda x:x['date_of_change'], reverse=True)
 
 
 class Residence:
