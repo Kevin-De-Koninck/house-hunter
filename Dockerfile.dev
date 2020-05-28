@@ -12,7 +12,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends --yes python3-v
     python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip && \
     /venv/bin/pip install -r /requirements.txt && \
-    /venv/bin/pip install ipdb  # Extra development tools not available in prod image
+    /venv/bin/pip install ipdb
+# install geckodriver and firefox
+RUN apt install -y libappindicator3-1 libdbus-glib-1-2 xdg-utils xvfb x11-xkb-utils
+RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+'` && \
+    wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz && \
+    tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin && \
+    chmod +x /usr/local/bin/geckodriver && \
+    rm geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+RUN FIREFOX_SETUP=firefox-setup.tar.bz2 && \
+    apt-get purge firefox && \
+    wget -O $FIREFOX_SETUP "https://download.mozilla.org/?product=firefox-latest&os=linux64" && \
+    tar xjf $FIREFOX_SETUP -C /opt/ && \
+    ln -s /opt/firefox/firefox /usr/bin/firefox && \
+    rm $FIREFOX_SETUP
+
+
+# Extra development tools not available in prod image
 
 # Copy the entire repository and run all tests in the tester image
 FROM builder AS tester
@@ -35,6 +51,21 @@ RUN /venv/bin/bandit -r --ini setup.cfg
 FROM base AS runner
 COPY --from=builder /venv /venv
 COPY --from=tester /app/househunter /app/househunter
+
+# Provided by firefox and dependencies: libappindicator3-1 libdbus-glib-1-2 xdg-utils
+COPY --from=builder /opt/firefox/ /opt/firefox/
+COPY --from=builder /usr/local/bin/geckodriver /usr/local/bin/geckodriver
+COPY --from=builder /usr/bin/Xvfb /usr/bin/Xvfb
+COPY --from=builder /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
+COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+
+# Provided by package x11-xkb-utils
+COPY --from=builder /usr/bin/xkbcomp /usr/bin/xkbcomp
+
+# Provided by package xvfb
+COPY --from=builder /usr/share/X11/xkb/ /usr/share/X11/xkb/
+
+ENV PATH="/opt/firefox/:${PATH}"
 #ENVIRONMENT_VARS
 #EXPOSED_PORTS
 ENV PATH=/venv/bin/:${PATH}
