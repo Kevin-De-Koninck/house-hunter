@@ -25,6 +25,6 @@ class Price:
 
     def add(self, price):
         self.history.append({"date_of_change": datetime.now().timestamp(),
-                             "price": price})
+                             "price": int(price)})
         self.history.sort(key=lambda x: x['date_of_change'], reverse=True)
 
