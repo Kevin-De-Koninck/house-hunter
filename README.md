@@ -34,9 +34,11 @@ househunter:
     - 'immo.vlan.be'
     - 'realo.be'
     - 'immoscoop.be'
+
   postal_codes:
     - 2200  # Herentals
     - 2000  # Antwerp
+
   price:
     old_real_estate:
       minimum: 170000
@@ -44,32 +46,52 @@ househunter:
     new_real_estate:
       minimum: 150000
       maximum: 230000
-  property:
-    types:
-      - house
-      - apartment
-      - new-real-estate-project-houses
-      - new-real-estate-project-apartments
-    filters:
-      required:
-        bedrooms_min: 2
-        connected_to_the_sewer_network: True
-        flood_zone: False
-        gas_water_electricity: True
-        double_glazing: True
-        planning_permission_obtained: True
-        Latest_land_use_designation: 'Living area'
-        epc_max: 700
-        build_year_max: 1990
-      preferred:
-        building_state:
-          - 'as new'
-          - 'good'
-        kitchen_type: 'installed' 
-        facades: 4
-        mobi_score_min: 7
-        garage: True
-        garden: True
+
+  types:
+    house: False
+    apartment: True
+    new_real_estate: False
+    
+  filters:
+    general:
+      building_condition: 
+        - None
+      exclude_building_condition:
+        - None
+      construction_year_minimum: 1950
+      covered_parking_spaces_minimum: 0
+      outdoor_parking_spaces_minimum: 0
+      facades_minimum: 0
+
+    interior:
+      kitchen_type:
+        - None
+      exclude_kitchen_type:
+        - None
+      bedrooms_minimum: 2
+      bathrooms_minimum: 1
+      toilets_minimum: 1
+      has_basement: False
+      has_attic: False
+      is_furnished: False
+
+    exterior:
+      surface_of_the_plot_minimum: 100
+      is_connected_to_the_sewer_network: True
+      has_terrace: False
+      has_gas_water_electricity: True
+
+    energy:
+      energy_class_maximum: F
+      epc_maximum: 700
+      has_double_glazing: True
+      has_heat_pump: None
+      has_pv_cells: None
+
+    townplanning:
+      is_flood_zone: False
+      Latest_land_use_designation: 'living area'
+      has_planning_permission_obtained: True
 
 pushover:
   API_token: 'abcdefghijklmnopqrstuvwxyz0123'
