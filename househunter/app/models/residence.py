@@ -74,6 +74,9 @@ class Meta:
         self.address = None
         self.postal_code = None
         self.city = None
+        self.house = False
+        self.apartment = False
+        self.new_real_estate = False
 
     def __repr__(self):
         return repr(self.__dict__)

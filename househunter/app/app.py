@@ -9,8 +9,21 @@ class Househunter:
         self.hs = settings.househunter
         self.ps = settings.pushover
         self.scraper = Scraper()
+
+        # This will be loaded from and saved to disk
+        # It's a list of Residence instances of all residences on all immo websites
         self.all_parsed_residences = []
+
+        # The following vars are mainly used to send notifications
+        # They must be provided by each site parser too.
+
+        # This list contains all residences that have a price change since last parsing
+        # They will be collected in this list, and the price change will also be added
+        # in the self.all_parsed_residences list
         self.all_residences_with_price_changes = []
+
+        # This list contains all new residences that have been added since the last parsing
+        # They have been added to self.all_parsed_residences too
         self.all_new_parsed_residences = []
 
     def parse_all_sites(self):
@@ -45,4 +58,12 @@ class Househunter:
                         site,
                         len(site_instance.all_new_parsed_residences),
                         len(site_instance.all_residences_with_price_changes))
+
+    # Return a list of residences that meet our filter
+    def filter_all_new_parsed_results(self):
+        for residence in self.all_new_parsed_residences:
+            pass
+
+
+
 

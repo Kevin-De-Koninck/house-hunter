@@ -9,9 +9,18 @@ class Search_result_item:
         self.price = None
         self.url = None
         self.reference_code = None
+        self.house = False
+        self.apartment = False
+        self.new_real_estate = False
 
 
 class Immoweb:
+    HOUSE = 'house'
+    APARTMENT = 'apartment'
+    NEW_REAL_ESTATE_HOUSE = 'new-real-estate-project-houses'
+    NEW_REAL_ESTATE_APARTMENT = 'new-real-estate-project-apartments'
+    NEW_REAL_ESTATE = 'new-real-estate'
+
     def __init__(self, settings, scraper, all_parsed_residences):
         self.settings = settings
         self.scraper = scraper
@@ -37,10 +46,20 @@ class Immoweb:
         self.all_new_parsed_residences = []
 
     def parse(self):
-        for residence_type in ["house"]:
+        residence_types = []
+        if self.settings.types.house == True:
+            residence_types.append(self.HOUSE)
+        if self.settings.types.apartment == True:
+            residence_types.append(self.APARTMENT)
+        if self.settings.types.new_real_estate == True and self.settings.types.house == True:
+            residence_types.append(self.NEW_REAL_ESTATE_HOUSE)
+        if self.settings.types.new_real_estate == True and self.settings.types.apartment == True:
+            residence_types.append(self.NEW_REAL_ESTATE_APARTMENT)
+
+        for residence_type in residence_types:
             logger.debug("Now parsing the search results for residence type: %s", residence_type)
             base_search_url = self.create_base_search_url(residence_type)
-            self.get_all_search_result_links(base_search_url)
+            self.get_all_search_result_links(base_search_url, residence_type)
 
         self.determine_new_deleted_and_changed_results()
         self.parse_search_results()
@@ -81,19 +100,19 @@ class Immoweb:
     def create_base_search_url(self, property_type):
         data = {}
         data['postal_codes'] = "%2C".join([str(i) for i in self.settings.postal_codes])
-        if 'new-real-estate-project-' in property_type:
+        if self.NEW_REAL_ESTATE in property_type:
             data['min_price'] = self.settings.price.new_real_estate.minimum
             data['max_price'] = self.settings.price.new_real_estate.maximum
         else:
             data['min_price'] = self.settings.price.old_real_estate.minimum
             data['max_price'] = self.settings.price.old_real_estate.maximum
         data['residence'] = property_type
-        data['min_bedrooms'] = self.settings.property.filters.required.bedrooms_min
+        data['min_bedrooms'] = self.settings.filters.interior.bedrooms_minimum
         url = self.base_url.format(**data)
         logger.debug("Using the following url: %s", url)
         return url
 
-    def get_all_search_result_links(self, base_search_url):
+    def get_all_search_result_links(self, base_search_url, residence_type):
         pages = [base_search_url]
 
         for page in pages:
@@ -119,6 +138,18 @@ class Immoweb:
                 search_result.price = int(''.join(filter(str.isdigit, price_string)))
                 search_result.url = a.get('href')
                 search_result.reference_code = a.get('href').split('/')[-1].split('?')[0]
+
+                # Remember the type
+                if residence_type == self.HOUSE:
+                    search_result.house = True
+                if residence_type == self.APARTMENT:
+                    search_result.apartment = True
+                if residence_type == self.NEW_REAL_ESTATE_HOUSE:
+                    search_result.new_real_estate = True
+                    search_result.house = True
+                if residence_type == self.NEW_REAL_ESTATE_APARTMENT:
+                    search_result.new_real_estate = True
+                    search_result.apartment = True
 
                 self.all_results_in_search.append(search_result)
 
@@ -161,6 +192,9 @@ class Immoweb:
             else:
                 meta.postal_code = address_line_split[0].split('—')[0].strip()
                 meta.city = address_line_split[0].split('—')[1].strip()
+            meta.house = search_result.house
+            meta.apartment = search_result.apartment
+            meta.new_real_estate = search_result.new_real_estate
 
             # General secition
             try:
