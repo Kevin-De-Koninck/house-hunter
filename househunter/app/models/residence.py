@@ -83,9 +83,10 @@ class Meta:
         self.house = False
         self.apartment = False
         self.new_real_estate = False
+        self.image = None
 
     def __repr__(self):
-        items = {k:v for k,v in self.__dict__.items() if v is not None}
+        items = {k:v for k,v in self.__dict__.items() if v is not None and k not in ['image', 'url']}
         return repr(items)
 
 

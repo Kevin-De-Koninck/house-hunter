@@ -1,3 +1,5 @@
+import requests
+import base64
 from logzero import logger
 from bs4 import BeautifulSoup
 from copy import deepcopy
@@ -202,6 +204,11 @@ class Immoweb:
             meta.apartment = search_result.apartment
             meta.new_real_estate = search_result.new_real_estate
             meta.url = search_result.url
+            try:
+                image_url = page.find('img', class_='classified-gallery__picture').get('src')
+                meta.image = base64.b64encode(requests.get(image_url).content)
+            except:
+                pass
 
             # General secition
             try:

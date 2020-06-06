@@ -1,5 +1,6 @@
 import sys
 import requests
+import base64
 from logzero import logger
 
 
@@ -22,7 +23,9 @@ class Pushover:
             data['url'] = message.url
         if message.url_title is not None:
             data['url_title'] = message.url_title
-        if message.image_path is not None:
+        if message.image_base64 is not None:
+            files = {"attachment": ("image.jpg", base64.decodebytes(message.image_base64), "image/jpeg")}
+        elif message.image_path is not None:
             files = {"attachment": ("image.jpg", open(message.image_path, "rb"), "image/jpeg")}
 
         response = requests.post("https://api.pushover.net/1/messages.json",
@@ -42,13 +45,14 @@ class Message:
     NORMAL_NOTIFICATION = 0
     HIGH_PRIORITY = 1
 
-    def __init__(self, title=None, message="", image_path=None, url=None, url_title=None, priority=None):
+    def __init__(self, title=None, message="", image_path=None, url=None, url_title=None, priority=None, image_base64=None):
         self.title = title
         self.message = message
         self.image_path = image_path
         self.url = url
         self.url_title = url_title
         self.priority = self.NORMAL_NOTIFICATION if priority is None else priority
+        self.image_base64 = image_base64
 
     def __str__(self):
         return repr(self.__dict__)

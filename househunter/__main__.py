@@ -89,7 +89,9 @@ if __name__ == '__main__':
             logger.debug("Sending a notification for new residence '%s' on '%s'", residence.meta.reference_code, residence.meta.immo_site)
             message = Message(title='New: {} - {}'.format(residence.meta.reference_code, residence.meta.immo_site),
                               url=residence.meta.url,
-                              priority=Message.NORMAL_NOTIFICATION)
+                              priority=Message.NORMAL_NOTIFICATION,
+                              image_path=demo_image,
+                              image_base64=residence.meta.image)
             message.add_message(dump(literal_eval(repr(residence)), default_flow_style=False))
             pushover.send(message)
 
@@ -102,7 +104,9 @@ if __name__ == '__main__':
             logger.debug("Sending a notification for price changed residence '%s' on '%s'", residence.meta.reference_code, residence.meta.immo_site)
             message = Message(title='PRICE CHANGE: {} - {}'.format(residence.meta.reference_code, residence.meta.immo_site),
                               url=residence.meta.url,
-                              priority=Message.HIGH_PRIORITY)
+                              priority=Message.HIGH_PRIORITY,
+                              image_path=demo_image,
+                              image_base64=residence.meta.image)
             message.add_message(dump(literal_eval(repr(residence)), default_flow_style=False))
             pushover.send(message)
 
