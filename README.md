@@ -13,6 +13,11 @@
 ``` bash
 ./build.sh -p dev
 ./run.sh
+
+./build.sh -p dev -s && time ./run.sh -c '--reset-data'
+./build.sh -p dev -s && time ./run.sh -c '--apply-filters-only'
+./build.sh -p dev -s && time ./run.sh -c '--apply-filters-only --no-notification'
+
 ```
 
 ### Prod container

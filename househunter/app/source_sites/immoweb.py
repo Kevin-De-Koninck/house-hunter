@@ -151,6 +151,12 @@ class Immoweb:
                     search_result.new_real_estate = True
                     search_result.apartment = True
 
+                # Check for flags on the post indicating new projects or builds
+                all_flags = item.find_all('span', class_='flag-list__text')
+                for flag in all_flags:
+                    if flag.text.strip().lower() in ["new build", "new real estate project"]:
+                        search_result.new_real_estate = True 
+
                 self.all_results_in_search.append(search_result)
 
             # If we have multiple pages, save the link of the next page
@@ -195,6 +201,7 @@ class Immoweb:
             meta.house = search_result.house
             meta.apartment = search_result.apartment
             meta.new_real_estate = search_result.new_real_estate
+            meta.url = search_result.url
 
             # General secition
             try:
@@ -208,21 +215,21 @@ class Immoweb:
                 if key == 'available as of':
                     general.available_as_of = value
                 elif key == 'construction year':
-                    general.construction_year = value
+                    general.construction_year = int(''.join(filter(str.isdigit, value)))
                 elif key == 'building condition':
                     general.building_condition = value
                 elif key == 'facades':
-                    general.facades = value
+                    general.facades = int(''.join(filter(str.isdigit, value)))
                 elif key == 'covered parking spaces':
-                    general.covered_parking_spaces = value
+                    general.covered_parking_spaces = int(''.join(filter(str.isdigit, value)))
                 elif key == 'outdoor parking spaces':
-                    general.outdoor_parking_spaces = value
+                    general.outdoor_parking_spaces = int(''.join(filter(str.isdigit, value)))
                 elif key == 'street facade width':
-                    general.facade_width_street = value
+                    general.facade_width_street = int(''.join(filter(str.isdigit, value)))
                 elif key == 'floor':
-                    general.floor = value
+                    general.floor = int(''.join(filter(str.isdigit, value)))
                 elif key == 'number of floors':
-                    general.number_of_floors = value
+                    general.number_of_floors = int(''.join(filter(str.isdigit, value)))
 
             # Interior section
             try:
@@ -235,17 +242,17 @@ class Immoweb:
                 if key == 'kitchen type':
                     interior.kitchen_type = value
                 elif key == 'bedrooms':
-                    interior.bedrooms = value
+                    interior.bedrooms = int(''.join(filter(str.isdigit, value)))
                 elif key == 'bathrooms':
-                    interior.bathrooms = value
+                    interior.bathrooms = int(''.join(filter(str.isdigit, value)))
                 elif key == 'toilets':
-                    interior.toilets = value
+                    interior.toilets = int(''.join(filter(str.isdigit, value)))
                 elif key == 'basement':
-                    interior.basement = value
+                    interior.basement = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'attic':
-                    interior.attic = value
+                    interior.attic = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'furnished':
-                    interior.furnished = value
+                    interior.furnished = value.lower() not in ['no', 'false', 'nee', 'neen']
 
             # Exterior section
             try:
@@ -256,13 +263,13 @@ class Immoweb:
                 key = line.find('th').text.strip().lower()
                 value = line.find('td').text.strip()
                 if key == 'surface of the plot':
-                    interior.surface_of_the_plot = value.split()[0]
+                    interior.surface_of_the_plot = int(''.join(filter(str.isdigit, value.split()[0])))
                 elif key == 'connection to sewer network':
-                    interior.connected_to_the_sewer_network = value
+                    interior.connected_to_the_sewer_network = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'terrace':
-                    interior.terrace = value
+                    interior.terrace = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'gas, water & electricity':
-                    interior.has_gas_water_electricity = value
+                    interior.has_gas_water_electricity = value.lower() not in ['no', 'false', 'nee', 'neen']
 
             # Energy section
             try:
@@ -276,17 +283,20 @@ class Immoweb:
                 except AttributeError:  # Energy class image
                     continue
                 if 'e-level' in key:
-                    energy.epc = value
+                    try:
+                        energy.epc = int(''.join(filter(str.isdigit, value.split()[0])))
+                    except ValueError:  # value = 'Not specified'
+                        pass
                 elif key == 'energy class':
                     energy.energy_class = value
                 elif key == 'heating type':
                     energy.heating_type = value
                 elif key == 'double glazing':
-                    energy.double_glazing = value
+                    energy.double_glazing = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'heat pump':
-                    energy.heat_pump = value
+                    energy.heat_pump = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif 'solar panels' in key:
-                    energy.pv_cells = value
+                    energy.pv_cells = value.lower() not in ['no', 'false', 'nee', 'neen']
 
             # townplanning section
             try:
@@ -297,11 +307,11 @@ class Immoweb:
                 key = line.find('th').text.strip().lower()
                 value = line.find('td').text.strip()
                 if 'flood zone' in key:
-                    townplanning.flood_zone = value
+                    townplanning.flood_zone = value.lower() not in ['no', 'false', 'nee', 'neen']
                 elif key == 'latest land use designation':
-                    townplanning.Latest_land_use_designation = value
+                    townplanning.latest_land_use_designation = value
                 elif key == 'planning permission obtained':
-                    townplanning.planning_permission_obtained = value
+                    townplanning.planning_permission_obtained = value.lower() not in ['no', 'false', 'nee', 'neen']
 
             # Create a residence
             residence = Residence(general=general, interior=interior, exterior=exterior, energy=energy, townplanning=townplanning, meta=meta)
