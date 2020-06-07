@@ -60,6 +60,6 @@ class Message:
     def add_message(self, message):
         if self.message != "":
             self.message += "\n"
-        self.message += message + "\n"
+        self.message += message
 
 

@@ -81,35 +81,40 @@ if __name__ == '__main__':
     pushover = Pushover(settings.pushover.user_key, settings.pushover.API_token)
 
     # For each new passed residence, send a notification
-    if args.no_notification:
-        for residence in matches:
+    for residence in matches:
+        if args.no_notification:
             logger.info("The following residence matched all filters: %s", repr(residence))
-    else:
-        for residence in matches:
+        else:
             logger.debug("Sending a notification for new residence '%s' on '%s'", residence.meta.reference_code, residence.meta.immo_site)
             message = Message(title='New: {} - {}'.format(residence.meta.reference_code, residence.meta.immo_site),
                               url=residence.meta.url,
                               priority=Message.NORMAL_NOTIFICATION,
                               image_path=demo_image,
                               image_base64=residence.meta.image)
-            message.add_message(dump(literal_eval(repr(residence)), default_flow_style=False))
+            message.add_message("Price: {:,.2f}".format(int(residence.meta.price.price)))
+            message.add_message("Location: {} - {}".format(residence.meta.postal_code, residence.meta.city))
             pushover.send(message)
 
     # For each price change, send a notification
-    if args.no_notification:
-        for residence in househunter.all_residences_with_price_changes:
+    for residence in househunter.all_residences_with_price_changes:
+        if args.no_notification:
             logger.info("The following residences had a price change: %s", repr(residence))
-    else:
-        for residence in househunter.all_residences_with_price_changes:
+        else:
             logger.debug("Sending a notification for price changed residence '%s' on '%s'", residence.meta.reference_code, residence.meta.immo_site)
             message = Message(title='PRICE CHANGE: {} - {}'.format(residence.meta.reference_code, residence.meta.immo_site),
                               url=residence.meta.url,
                               priority=Message.HIGH_PRIORITY,
                               image_path=demo_image,
                               image_base64=residence.meta.image)
-            message.add_message(dump(literal_eval(repr(residence)), default_flow_style=False))
+            message.add_message("Price: {:,.2f}".format(int(residence.meta.price.price)))
+            message.add_message("Location: {} - {}".format(residence.meta.postal_code, residence.meta.city))
+            message.add_message("")
+            message.add_message("PRICE CHANGES:")
+            message.add_message("")
+            message.add_message(dump(literal_eval(repr(residence.meta.price)), default_flow_style=False))
             pushover.send(message)
 
     # The end
     logger.info("Successfully parsed all residences")
     exit(0)
+
